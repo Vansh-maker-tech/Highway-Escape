@@ -1,329 +1,534 @@
 <!DOCTYPE html>
 <html>
+
 <head>
-  <meta charset="UTF-8">
-  <title>Three.js Game</title>
-  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no" />
-  <!-- Basic SEO Tags -->
-  <meta name="description" content="Play Highway Escape – a 3D car dodging game built with Three.js. Avoid obstacles and survive as long as possible!">
-  <meta name="keywords" content="Three.js car game, 3D car game, highway escape, web game, play car game online">
-  <meta name="author" content="Vansh Saini">
+    <meta charset="UTF-8">
+    <title>Three.js Game</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no" />
+    <!-- Basic SEO Tags -->
+    <meta name="description" content="Play Highway Escape – a 3D car dodging game built with Three.js. Avoid obstacles and survive as long as possible!">
+    <meta name="keywords" content="Three.js car game, 3D car game, highway escape, web game, play car game online">
+    <meta name="author" content="Vansh Saini">
 
-  <!-- Open Graph for social sharing -->
-  <meta property="og:title" content="Highway Escape - 3D Car Game">
-  <meta property="og:description" content="Avoid obstacles, dodge traffic, and survive on the highway!">
-  <meta property="og:url" content="https://your-game-url.com">
-  <meta property="og:type" content="website">
+    <!-- Open Graph for social sharing -->
+    <meta property="og:title" content="Highway Escape - 3D Car Game">
+    <meta property="og:description" content="Avoid obstacles, dodge traffic, and survive on the highway!">
+    <meta property="og:url" content="https://your-game-url.com">
+    <meta property="og:type" content="website">
 
-  <!-- Twitter Card -->
-  <meta name="twitter:card" content="summary">
-  <meta name="twitter:title" content="Highway Escape - 3D Car Game">
-  <meta name="twitter:description" content="Test your reflexes in this thrilling 3D car game.">
-  <style>
-    * {
-      margin: 0;
-      padding: 0;
-      box-sizing: border-box;
-    }
-    html, body {
-      width: 100vw;
-      height: 100vh;
-      overflow: hidden;
-      font-family: sans-serif;
-    }
-    canvas {
-      display: block;
-      width: 100vw;
-      height: 100vh;
-    }
-    #rightBtn, #leftBtn {
-      position: absolute;
-      font-size: 14px;
-      bottom: 2.2vh;
-      width: 11vh;
-      height: 7vh;
-      border-radius: 1.8vh;
-      border: none;
-      background-color: maroon;
-      color: yellow;
-      visibility: hidden;
-      z-index: 2;
-    }
-    #rightBtn { right: 4.1vh; }
-    #leftBtn { left: 4.1vh; }
+    <!-- Twitter Card -->
+    <meta name="twitter:card" content="summary">
+    <meta name="twitter:title" content="Highway Escape - 3D Car Game">
+    <meta name="twitter:description" content="Test your reflexes in this thrilling 3D car game.">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
 
-    #rightBtn:active, #leftBtn:active, #startBtn:active {
-      background-color: yellow;
-      color: maroon;
-    }
+        html,
+        body {
+            width: 100vw;
+            height: 100vh;
+            overflow: hidden;
+            font-family: sans-serif;
+        }
 
-    #startBtn {
-      font-size: 18px;
-      padding: 1vh 2vh;
-      border-radius: 2vh;
-      border: none;
-      background-color: maroon;
-      color: yellow;
-      cursor: pointer;
-      animation: pulse 1.5s infinite;
-    }
-    #restartBtn {
-      position: absolute;
-      bottom: 44vh;
-      right: 23vh;
-      border: none;
-      font-size: 18px;
-      padding: 1vh 2vh;
-      border-radius: 2vh;
-      background-color: maroon;
-      color: yellow;
-      animation: pulse 1.5s infinite;
-      visibility: hidden;
-    }
-    #gameOver {
-      position: absolute;
-      bottom: 54vh;
-      right: 15vh;
-      visibility: hidden;
-      color: cyan;
-    }
-    #tellScore {
-      position: absolute;
-      bottom: 49.7vh;
-      right: 18vh;
-      margin: 0px 0px px 9px;
-      visibility: hidden;
-      color: cyan;
-    }
-    #score {
-      position: absolute;
-      top: 1.1vh;
-      right: 1.3vh;
-      color: cyan;
-      visibility: hidden;
-    }
-    
-    @keyframes pulse {
-      0% { transform: scale(1); }
-      50% { transform: scale(1.08); }
-      100% { transform: scale(1); }
-    }
+        canvas {
+            display: block;
+            width: 100vw;
+            height: 100vh;
+        }
 
-    #startScreen {
-      position: absolute;
-      width: 100%;
-      height: 100%;
-      background: rgba(0, 0, 0, 0.7);
-      z-index: 1;
-      display: flex;
-      flex-direction: column;
-      justify-content: center;
-      align-items: center;
-      color: white;
-      text-align: center;
-    }
-    
-    #startScreen h1 {
-      font-size: 5vh;
-      margin-bottom: 2vh;
-    }
+        #rightBtn,
+        #leftBtn {
+            position: absolute;
+            font-size: 14px;
+            bottom: 2.2vh;
+            width: 11vh;
+            height: 7vh;
+            border-radius: 1.8vh;
+            border: none;
+            background-color: maroon;
+            color: yellow;
+            visibility: hidden;
+            z-index: 2;
+        }
 
-    #startScreen p {
-      font-size: 2.5vh;
-      margin-bottom: 4vh;
-    }
-  </style>
+        #rightBtn {
+            right: 4.1vh;
+        }
+
+        #leftBtn {
+            left: 4.1vh;
+        }
+
+        #rightBtn:active,
+        #leftBtn:active,
+        #startBtn:active {
+            background-color: yellow;
+            color: maroon;
+        }
+
+        #startBtn, #winBtn{
+            font-size: 18px;
+            padding: 1vh 2vh;
+            border-radius: 2vh;
+            border: none;
+            background-color: maroon;
+            color: yellow;
+            cursor: pointer;
+            animation: pulse 1.5s infinite;
+        }
+
+        #restartBtn {
+            position: absolute;
+            bottom: 44vh;
+            right: 23vh;
+            border: none;
+            font-size: 18px;
+            padding: 1vh 2vh;
+            border-radius: 2vh;
+            background-color: maroon;
+            color: yellow;
+            animation: pulse 1.5s infinite;
+            visibility: hidden;
+        }
+
+        #gameOver {
+            position: absolute;
+            bottom: 54vh;
+            right: 15vh;
+            visibility: hidden;
+            color: cyan;
+        }
+
+        #tellScore {
+            position: absolute;
+            bottom: 49.7vh;
+            right: 18vh;
+            margin: 0px 0px px 9px;
+            visibility: hidden;
+            color: cyan;
+        }
+
+        #score {
+            position: absolute;
+            top: 1.1vh;
+            right: 1.3vh;
+            color: cyan;
+            visibility: hidden;
+        }
+
+        @keyframes pulse {
+            0% {
+                transform: scale(1);
+            }
+
+            50% {
+                transform: scale(1.08);
+            }
+
+            100% {
+                transform: scale(1);
+            }
+        }
+
+        #startScreen{
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.7);
+            z-index: 1;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            color: white;
+            text-align: center;
+        }
+
+        #startScreen h1 {
+            font-size: 5vh;
+            margin-bottom: 2vh;
+        }
+
+        #startScreen p {
+            font-size: 2.5vh;
+            margin-bottom: 4vh;
+        }
+        /* Win screen */
+        #winScreen{
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.7);
+            z-index: 1;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            color: white;
+            text-align: center;
+            display: none;
+        }
+        #winScreen h1 {
+            font-size: 5vh;
+            margin-bottom: 2vh;
+        }
+        #winScreen p {
+            font-size: 2.5vh;
+            margin-bottom: 4vh;
+        }
+    </style>
 </head>
+
 <body>
-<div id="startScreen">
-  <h1>🚗 Highway Escape</h1>
-  <p>Tap Start to Begin</p>
-  <button id="startBtn">Start</button>
-</div>
-<button id="rightBtn">Right</button>
-<button id="leftBtn">Left</button>
+    <div id="startScreen">
+        <h1>🚗 Highway Escape</h1>
+        <p>Tap Start to Begin</p>
+        <button id="startBtn">Start</button>
+    </div>
+    <!--Win scene-->
+    
+    <div id="winScreen">
+        <h1>🚗 Highway Escape</h1>
+        <p>You won and moved to level 2!</p>
+        <button id="winBtn">Start</button>
+    </div>
+    
+    <button id="rightBtn">Right</button>
+    <button id="leftBtn">Left</button>
+    <button id="restartBtn">Restart</button>
+    <h1 id="gameOver">Game Over!</h1>
+    <h1 id="tellScore">Score : 0</h1>
+    <audio src="train-whistle.ogg" id="backMusic"></audio>
+    <audio src="seagullwarning.ogg" id="collisionMusic"></audio>
+    <audio src="explosion.mp3" id="explodeSound"></audio>
+    <h1 id="score">Score : 0</h1>
+    <script type="module">
+        import * as THREE from "https://cdn.jsdelivr.net/npm/three@0.160.0/build/three.module.js";
+        import * as CANNON from "https://cdn.jsdelivr.net/npm/cannon-es@0.20.0/dist/cannon-es.js";
 
-<!--Restartbtn scene-->
-<button id="restartBtn">Restart</button>
-<h1 id="gameOver">Game Over!</h1>
-<!--Tells score on gameOver-->
-<h1 id="tellScore">Score : 0</h1>
+        let isGameOver = true;
+        let car;
+        let score = document.getElementById("score");
+        let SCORE = 0;
+        let enemies2 = [];
+        let enemies2_bullets = [];
+        let enemy2;
+        let enemy3;
+        let enemy2_bullets;
+        let carSpeed = 0.000003;
+        let enemy2_speed = 0.0000002
+        // Current Scene
+        let currentLevel = 1
+        const LEFT_LIMIT = -4.9;
+        const RIGHT_LIMIT = 4.9;
 
-<audio src="train-whistle.ogg" id="backMusic"></audio>
-<audio src="seagullwarning.ogg" id="collisionMusic"></audio>
-<h1 id="score">Score : 0</h1>
-<script type="module">
-  import * as THREE from "https://cdn.jsdelivr.net/npm/three@0.160.0/build/three.module.js";
-  import * as CANNON from "https://cdn.jsdelivr.net/npm/cannon-es@0.20.0/dist/cannon-es.js";
-  // some game variable
-  let isGameOver = true;
-  let car;
-  let score = document.getElementById("score")
-  let SCORE = 0;
-  let carSpeed = 0.000003;
-  const LEFT_LIMIT = -4.9;
-  const RIGHT_LIMIT = 4.9;
+        const rightBtn = document.getElementById("rightBtn");
+        const leftBtn = document.getElementById("leftBtn");
+        const startBtn = document.getElementById("startBtn");
+        const restartBtn = document.getElementById("restartBtn");
+        const winBtn = document.getElementById("winBtn")
+        const startScreen = document.getElementById("startScreen");
+        const winScreen = document.getElementById("winScreen")
 
-  // some buttons
-  const rightBtn = document.getElementById("rightBtn");
-  const leftBtn = document.getElementById("leftBtn");
-  const startBtn = document.getElementById("startBtn");
-  const restartBtn = document.getElementById("restartBtn");
-  const startScreen = document.getElementById("startScreen");
-  
-  // some musics
-  const backgroundMusic = document.getElementById("backMusic")
-  const collisionMusic = document.getElementById("collisionMusic")
-  
-  // h1
-  const gameOver = document.querySelector("#gameOver");
-  const tellScore = document.querySelector("#tellScore");
+        const backgroundMusic = document.getElementById("backMusic");
+        const collisionMusic = document.getElementById("collisionMusic");
 
-  const scene = new THREE.Scene();
-  const camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000);
-  camera.position.set(0, 5, 10);
-  camera.lookAt(0, 0, 0);
+        const gameOver = document.querySelector("#gameOver");
+        const tellScore = document.querySelector("#tellScore");
 
-  const renderer = new THREE.WebGLRenderer({ antialias: true });
-  renderer.setSize(window.innerWidth, window.innerHeight);
-  document.body.appendChild(renderer.domElement);
+        const scene = new THREE.Scene();
+        //scene.fog = new THREE.FogExp2(0x000000, 0.04); // black fog
+        const camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000);
+        camera.position.set(0, 5, 10);
+        camera.lookAt(0, 0, 0);
 
-  const light = new THREE.DirectionalLight(0xffffff, 1);
-  light.position.set(5, 10, 5);
-  scene.add(light);
-  scene.add(new THREE.AmbientLight(0x404040));
-  
-  // physics world (can use if want physics)
-  const GPhysics = new CANNON.World({
-    gravity: new CANNON.Vec3(0,-9.82,0)
-  });
+        const renderer = new THREE.WebGLRenderer({ antialias: true });
+        renderer.setSize(window.innerWidth, window.innerHeight);
+        document.body.appendChild(renderer.domElement);
 
-  const ground = new THREE.Mesh(
-    new THREE.PlaneGeometry(100, 100),
-    new THREE.MeshStandardMaterial({ color: 0x00ffff })
-  );
-  ground.rotation.x = -Math.PI / 2;
-  scene.add(ground);
+        const light = new THREE.DirectionalLight(0xffffff, 1);
+        light.position.set(5, 10, 5);
+        scene.add(light);
+        scene.add(new THREE.AmbientLight(0x404040));
 
-  let enemies = [];
-  // Rendering car
-  const loader = new THREE.TextureLoader();
-  loader.load("https://threejsfundamentals.org/threejs/resources/images/flower-1.jpg", (texture) => {
-    car = new THREE.Mesh(
-      new THREE.BoxGeometry(2, 0.5, 4),
-      [
-        new THREE.MeshBasicMaterial({ color: 0x111111 }),
-        new THREE.MeshBasicMaterial({ color: 0x111111 }),
-        new THREE.MeshBasicMaterial({ map: texture }),
-        new THREE.MeshBasicMaterial({ color: 0x111111 }),
-        new THREE.MeshBasicMaterial({ color: 0x555555 }),
-        new THREE.MeshBasicMaterial({ color: 0x555555 })
-      ]
-    );
-    car.position.y = 0.25;
-    scene.add(car);
-
-    function spawnEnemy() {
-      let enemy = new THREE.Mesh(
-        new THREE.BoxGeometry(1, 1, 2),
-        new THREE.MeshStandardMaterial({ color: 0xff0000 })
-      );
-      enemy.position.set((Math.random() - 0.55) * 10, 0.5, car.position.z - 35);
-      scene.add(enemy);
-      enemies.push(enemy);
-    }
-
-    setInterval(() => {
-      if (!isGameOver){ 
-        spawnEnemy();
-        SCORE += 1
-        score.innerText = "Score : " + SCORE
-      };
-    }, 4000);
-
-    function animate() {
-      requestAnimationFrame(animate);
-      if (!isGameOver) {
-        carSpeed += 0.00006
-        car.position.z -= 0.08 + carSpeed;
-        //GPhysics.step(1/16);
-        //car.position.copy(carBody.position);
-        //car.quaternion.copy(carBody.quaternion);
-
-        // Checking collision
-        const carBox = new THREE.Box3().setFromObject(car);
-        enemies.forEach(enemy => {
-          const enemyBox = new THREE.Box3().setFromObject(enemy);
-          if (carBox.intersectsBox(enemyBox)) {
-            isGameOver = true;
-            backgroundMusic.pause();
-            backgroundMusic.loop = false;
-            collisionMusic.play()
-            // Restart scene
-            restartBtn.style.visibility = "visible";
-            gameOver.style.visibility = "visible";
-            tellScore.style.visibility = "visible";
-            tellScore.innerText = "Score : " + SCORE;
-            // setting score to 0
-            SCORE = 0;
-          }
+        const GPhysics = new CANNON.World({
+            gravity: new CANNON.Vec3(0, -9.82, 0)
         });
 
-        camera.position.set(car.position.x, car.position.y + 3.8, car.position.z + 9);
-        camera.lookAt(car.position);
-      }
-      renderer.render(scene, camera);
-    }
-    animate();
-  });
+        const ground = new THREE.Mesh(
+            new THREE.PlaneGeometry(100, 100),
+            new THREE.MeshStandardMaterial({ color: 0x00ffff })
+        );
+        ground.rotation.x = -Math.PI / 2;
+        scene.add(ground);
 
-  // Adding button click functions
-  rightBtn.addEventListener("click", () => {
-    if (!isGameOver && car.position.x < RIGHT_LIMIT) {
-      car.position.x += 2.5;
-    }
-  });
+        let enemies1 = [];
+        let enemies3 = [];
+        // Level 2 enemy
+        function spawnEnemy3(){
+          enemy3 = new THREE.Mesh(
+            new THREE.BoxGeometry(1, 1, 2),
+            new THREE.MeshStandardMaterial({ color: 0xff00ff })
+          );
+          enemy3.position.set((Math.random() - 0.55) * 10, 0.5, car.position.z - 35);
+          scene.add(enemy3);
+          enemies3.push(enemy3);
+        };
+        
+        const loader = new THREE.TextureLoader();
+        loader.load("https://threejsfundamentals.org/threejs/resources/images/flower-1.jpg", (texture) => {
+            car = new THREE.Mesh(
+                new THREE.BoxGeometry(2, 0.5, 4),
+                [
+                    new THREE.MeshBasicMaterial({ color: 0x111111 }),
+                    new THREE.MeshBasicMaterial({ color: 0x111111 }),
+                    new THREE.MeshBasicMaterial({ map: texture }),
+                    new THREE.MeshBasicMaterial({ color: 0x111111 }),
+                    new THREE.MeshBasicMaterial({ color: 0x555555 }),
+                    new THREE.MeshBasicMaterial({ color: 0x555555 })
+                ]
+            );
+            car.position.y = 0.25;
+            scene.add(car);
 
-  leftBtn.addEventListener("click", () => {
-    if (!isGameOver && car.position.x > LEFT_LIMIT) {
-      //console.log("Ok done")
-      car.position.x -= 2.5;
-    }
-  });
+            function spawnEnemy1() {
+                let enemy1 = new THREE.Mesh(
+                    new THREE.BoxGeometry(1, 1, 2),
+                    new THREE.MeshStandardMaterial({ color: 0xff0000 })
+                );
+                enemy1.position.set((Math.random() - 0.55) * 10, 0.5, car.position.z - 35);
+                scene.add(enemy1);
+                enemies1.push(enemy1);
+            }
 
-  startBtn.addEventListener("click", () => {
-    isGameOver = false;
-    backgroundMusic.loop = true;
-    backgroundMusic.play()
-    startScreen.style.display = "none";
-    rightBtn.style.visibility = "visible";
-    leftBtn.style.visibility = "visible";
-    score.style.visibility = "visible";
-  });
+            setInterval(() => {
+                if (!isGameOver) {
+                    spawnEnemy1();
+                    SCORE += 1;
+                    score.innerText = "Score : " + SCORE;
+                }
+            }, 4000);
 
-  restartBtn.addEventListener("click", () => {
-    isGameOver = false;
-    backgroundMusic.loop = true;
-    backgroundMusic.play()
-    // Restart scene
-    restartBtn.style.visibility = "hidden";
-    gameOver.style.visibility = "hidden";
-    tellScore.style.visibility = "hidden";
-    enemies.forEach(enemy => {
-      scene.remove(enemy);
-    });
-    enemies = []
-    SCORE = 0
-    carSpeed = 0.000003;
-    score.innerText = "Score : " + SCORE;
-    car.position.set(2, 0.25, 4)
-  });
+            function spawnEnemy2() {
+                enemy2 = new THREE.Mesh(
+                    new THREE.BoxGeometry(1, 1, 2),
+                    new THREE.MeshStandardMaterial({ color: 0x00ffff })
+                );
+                enemy2.position.set((Math.random() - 0.55) * 10, 0.5, car.position.z - 35);
+                scene.add(enemy2);
+                enemies2.push(enemy2);
+                  enemy2_bullets = new THREE.Mesh(
+                      new THREE.CylinderGeometry(0.1, 0.1, 1, 8),
+                      new THREE.MeshStandardMaterial({
+                          color: 0xffff00,
+                          emissive: 0xffff00,
+                          emissiveIntensity: 1.5,
+                          metalness: 0.6,
+                          roughness: 0.3
+                      })
+                  );
+                  enemy2_bullets.rotation.x = Math.PI / 2;
+                  enemy2_bullets.position.set(enemy2.position.x, enemy2.position.y, enemy2.position.z + 6);
+                  scene.add(enemy2_bullets);
+                  enemies2_bullets.push(enemy2_bullets);
+              }
 
-  window.addEventListener("resize", () => {
-    camera.aspect = window.innerWidth / window.innerHeight;
-    camera.updateProjectionMatrix();
-    renderer.setSize(window.innerWidth, window.innerHeight);
-  });
-</script>
+            setInterval(() => {
+                spawnEnemy2();
+            }, 24000);
+            
+            function animate() {
+                requestAnimationFrame(animate);
+                if (!isGameOver) {
+                    carSpeed += 0.00006;
+                    enemy2_speed += 0.000004
+                    car.position.z -= 0.08 + carSpeed;
+                    if(SCORE === 33 && currentLevel === 1){
+                      isGameOver = true;
+                      winScreen.style.display = "flex";
+                      backgroundMusic.loop = false;
+                      backgroundMusic.pause();
+                      currentLevel = 2;
+                    }
+
+                    enemies2_bullets.forEach(enemy2_bullets => {
+                        if (enemy2_bullets) {
+                          enemy2_bullets.position.z += 0.3 + enemy2_speed;
+                        };
+                    });
+
+                    const carBox = new THREE.Box3().setFromObject(car);
+                    enemies1.forEach(enemy1 => {
+                        const enemyBox = new THREE.Box3().setFromObject(enemy1);
+                        if (carBox.intersectsBox(enemyBox)) {
+                            isGameOver = true;
+                            backgroundMusic.pause();
+                            backgroundMusic.loop = false;
+                            collisionMusic.play();
+                            restartBtn.style.visibility = "visible";
+                            gameOver.style.visibility = "visible";
+                            tellScore.style.visibility = "visible";
+                            tellScore.innerText = "Score : " + SCORE;
+                            SCORE = 0;
+                        }
+                    });
+
+                    enemies2_bullets.forEach(enemy2_bullets => {
+                        const bulletBox = new THREE.Box3().setFromObject(enemy2_bullets);
+                        if (carBox.intersectsBox(bulletBox)) {
+                            isGameOver = true;
+                            backgroundMusic.pause();
+                            backgroundMusic.loop = false;
+                            collisionMusic.play();
+                            restartBtn.style.visibility = "visible";
+                            gameOver.style.visibility = "visible";
+                            tellScore.style.visibility = "visible";
+                            tellScore.innerText = "Score : " + SCORE;
+                            SCORE = 0;
+                        }
+                    });
+                    enemies3.forEach((enemy3, index) => {
+                      if(car.position.distanceTo(enemy3.position) <= 4.2){
+                        isGameOver = true;
+                        backgroundMusic.loop = false;
+                        //collisionMusic.play();
+                        restartBtn.style.visibility = "visible";
+                        tellScore.style.visibility = "visible";
+                        gameOver.style.visibility = "visible";
+                        tellScore.innerText = "Score : " + SCORE;
+                        const explodeSound = document.getElementById("explodeSound");
+                        explodeSound.play();
+                        // Visual burst effect
+                        enemy3.scale.set(1, 1, 1);
+
+                        const burstInterval = setInterval(() => {
+                          enemy3.scale.multiplyScalar(0.7); // shrink it
+                          if (enemy3.scale.x < 0.05) {
+                            scene.remove(enemy3);           // remove from scene
+                            enemies3.splice(index, 1);      // remove from array
+                            clearInterval(burstInterval);
+                          }
+                        }, 50); // fast animation
+                        //backgroundMusic.play();
+                      } else if(car.position.distanceTo(enemy3.position) <= 5.5) {
+                        car.position.x += (enemy3.position.x - car.position.x) * 0.03;
+                        //player.position.y += (enemy.position.y - player.position.y) * 0.03;
+                        //player.position.z += (enemy.position.z - player.position.z)
+                      }
+                    });
+
+                    camera.position.set(car.position.x, car.position.y + 3.8, car.position.z + 9);
+                    camera.lookAt(car.position);
+                }
+                renderer.render(scene, camera);
+            }
+
+            animate();
+        });
+
+        rightBtn.addEventListener("click", () => {
+            if (!isGameOver && car.position.x < RIGHT_LIMIT) {
+                car.position.x += 2.5;
+            }
+        });
+
+        leftBtn.addEventListener("click", () => {
+            if (!isGameOver && car.position.x > LEFT_LIMIT) {
+                car.position.x -= 2.5;
+            }
+        });
+
+        startBtn.addEventListener("click", () => {
+            isGameOver = false;
+            backgroundMusic.loop = true;
+            backgroundMusic.play();
+            startScreen.style.display = "none";
+            rightBtn.style.visibility = "visible";
+            leftBtn.style.visibility = "visible";
+            score.style.visibility = "visible";
+        });
+
+        restartBtn.addEventListener("click", () => {
+            isGameOver = false;
+            backgroundMusic.loop = true;
+            backgroundMusic.play();
+            restartBtn.style.visibility = "hidden";
+            //winScreen.style.display = "none";
+            gameOver.style.visibility = "hidden";
+            tellScore.style.visibility = "hidden";
+
+            enemies1.forEach(enemy1 => {
+                scene.remove(enemy1);
+            });
+            enemies1 = [];
+
+            enemies2.forEach(enemy2 => {
+                scene.remove(enemy2);
+            });
+            enemies2 = [];
+
+            enemies2_bullets.forEach(enemy2_bullets => {
+                scene.remove(enemy2_bullets);
+            });
+            enemies2_bullets = [];
+            
+            // Remove enemy 3
+            enemies3.forEach(enemy3 => {
+                scene.remove(enemy3);
+            });
+            enemies3 = [];
+
+            SCORE = 0;
+            carSpeed = 0.000003;
+            score.innerText = "Score : " + SCORE;
+            car.position.set(2, 0.25, 4);
+        });
+        setInterval(() => {
+          if(currentLevel === 2){
+            spawnEnemy3();
+          }
+        }, 31000);
+        winBtn.addEventListener("click", () => {
+            isGameOver = true;
+            backgroundMusic.loop = false;
+            //backgroundMusic.play();
+            restartBtn.style.visibility = "visible";
+            gameOver.style.visibility = "hidden";
+            winScreen.style.display = "none";
+            tellScore.style.visibility = "hidden";
+
+            enemies1.forEach(enemy1 => {
+                scene.remove(enemy1);
+            });
+            enemies1 = [];
+
+            enemies2.forEach(enemy2 => {
+                scene.remove(enemy2);
+            });
+            enemies2 = [];
+
+            enemies2_bullets.forEach(enemy2_bullets => {
+                scene.remove(enemy2_bullets);
+            });
+            enemies2_bullets = [];
+
+            SCORE = 0;
+            carSpeed = 0.000003;
+            score.innerText = "Score : " + SCORE;
+            car.position.set(2, 0.25, 4);
+        });
+        
+        window.addEventListener("resize", () => {
+            camera.aspect = window.innerWidth / window.innerHeight;
+            camera.updateProjectionMatrix();
+            renderer.setSize(window.innerWidth, window.innerHeight);
+        });
+    </script>
 </body>
+
 </html>
