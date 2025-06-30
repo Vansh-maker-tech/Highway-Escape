@@ -222,6 +222,7 @@
         let enemy2_bullets;
         let carSpeed = 0.000003;
         let enemy2_speed = 0.0000002
+        let ground
         // Current Scene
         let currentLevel = 1
         const LEFT_LIMIT = -4.9;
@@ -259,14 +260,50 @@
         const GPhysics = new CANNON.World({
             gravity: new CANNON.Vec3(0, -9.82, 0)
         });
-
-        const ground = new THREE.Mesh(
+        
+        const loader = new THREE.TextureLoader();
+        ground = new THREE.Mesh(
             new THREE.PlaneGeometry(100, 100),
             new THREE.MeshStandardMaterial({ color: 0x00ffff })
         );
         ground.rotation.x = -Math.PI / 2;
-        scene.add(ground);
+        scene.add(ground)
+        const groundZ = ground.position.z;
+        
+        // Road
+        const road = new THREE.Mesh(
+          new THREE.PlaneGeometry(13.1,108.5),
+          new THREE.MeshStandardMaterial({color: 0x79ffff})
+        );
+        road.position.z = 7.5;
+        //road.rotation.x = -Math.PI/2.0009;
+        road.rotation.x = -Math.PI/2.0004;
+        scene.add(road);
+        
+        // lanes
+        let laneLines = [];
 
+function createLaneLines() {
+    const lineWidth = 0.2;
+    const lineHeight = 2;
+    const gap = 3; // distance between each line
+    const numLines = 55;
+
+    for (let i = 0; i < numLines; i++) {
+        const line = new THREE.Mesh(
+            new THREE.PlaneGeometry(lineWidth, lineHeight),
+            new THREE.MeshStandardMaterial({ color: 0xffffff }) // white lines
+        );
+        line.rotation.x = -Math.PI / 2;
+        line.position.set(0, 0.01, -i * (lineHeight + gap)); // slightly above the road
+        scene.add(line);
+        laneLines.push(line);
+    }
+}
+
+createLaneLines();
+//setInterval(createLaneLines,4000)
+        
         let enemies1 = [];
         let enemies3 = [];
         // Level 2 enemy
@@ -280,7 +317,7 @@
           enemies3.push(enemy3);
         };
         
-        const loader = new THREE.TextureLoader();
+        //const loader = new THREE.TextureLoader();
         loader.load("https://threejsfundamentals.org/threejs/resources/images/flower-1.jpg", (texture) => {
             car = new THREE.Mesh(
                 new THREE.BoxGeometry(2, 0.5, 4),
@@ -290,7 +327,9 @@
                     new THREE.MeshBasicMaterial({ map: texture }),
                     new THREE.MeshBasicMaterial({ color: 0x111111 }),
                     new THREE.MeshBasicMaterial({ color: 0x555555 }),
-                    new THREE.MeshBasicMaterial({ color: 0x555555 })
+                    new THREE.MeshBasicMaterial({
+                          color: 0x555555,
+                    })
                 ]
             );
             car.position.y = 0.25;
@@ -347,8 +386,10 @@
                 if (!isGameOver) {
                     carSpeed += 0.00006;
                     enemy2_speed += 0.000004
+                    road.position.z -= 0.068 + carSpeed;
+                    ground.position.z -= 0.068 + carSpeed;
                     car.position.z -= 0.08 + carSpeed;
-                    if(SCORE === 33 && currentLevel === 1){
+                    if(SCORE === 27 && currentLevel === 1){
                       isGameOver = true;
                       winScreen.style.display = "flex";
                       backgroundMusic.loop = false;
@@ -366,6 +407,8 @@
                     enemies1.forEach(enemy1 => {
                         const enemyBox = new THREE.Box3().setFromObject(enemy1);
                         if (carBox.intersectsBox(enemyBox)) {
+                            //ground.position.x -= 0.08;
+                            //camera.position.set(car.position.x, car.position.y + 6.8, car.position.z + 9);
                             isGameOver = true;
                             backgroundMusic.pause();
                             backgroundMusic.loop = false;
@@ -482,14 +525,23 @@
                 scene.remove(enemy3);
             });
             enemies3 = [];
+            laneLines.forEach(lane => {
+                scene.remove(lane)
+            });
+            laneLines = [];
+            createLaneLines() // After restart
+            road.position.set(0,0,7.5)
 
             SCORE = 0;
+            car.position.set(2, 0.25, 4);
+            ground.position.z = 0;
+            road.position.z = 7.5;
             carSpeed = 0.000003;
             score.innerText = "Score : " + SCORE;
             car.position.set(2, 0.25, 4);
         });
         setInterval(() => {
-          if(currentLevel === 2){
+          if(currentLevel === 2 && !isGameOver){
             spawnEnemy3();
           }
         }, 31000);
